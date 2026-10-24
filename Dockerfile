@@ -1,24 +1,27 @@
-# Installs a light Linux wrapper pre-packaged with Java 17
+# Use a lightweight Linux container with Java 17 pre-packaged
 FROM eclipse-temurin:17-jdk-jammy
 
-# Installs Node.js natively inside the container 
-RUN apt-get update && apt-get install -y curl && \
+# Safe Node.js 20 & dos2unix installation directly from official Ubuntu channels
+RUN apt-get update && \
+    apt-get install -y curl && \
     curl -fsSL https://nodesource.com | bash - && \
     apt-get install -y nodejs dos2unix && \
     rm -rf /var/lib/apt/lists/*
 
+# Establish the runtime directory structure
 WORKDIR /app
 COPY . .
 
-# Fixes Windows layout bugs and ensures scripts are executable
+# Convert layout spacing from Windows format (CRLF) to clean Linux format
 RUN dos2unix bungee/*.sh server/*.sh main.sh 2>/dev/null || true
 RUN chmod +x bungee/*.sh server/*.sh main.sh 2>/dev/null || true
 
-# Accept the Minecraft EULA automatically
+# Pre-accept the Minecraft software configuration license
 RUN echo "eula=true" > server/eula.txt
 
+# Open the network proxy channels
 EXPOSE 8081
 EXPOSE 25565
 
-# Bypass main.sh and tmux completely by booting the jar files directly
+# Launch both proxy environments simultaneously without tmux overhead
 CMD java -Xmx512M -jar bungee/bungee.jar & java -Xmx1G -jar server/server.jar
