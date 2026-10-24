@@ -22,4 +22,5 @@ EXPOSE 10000
 EXPOSE 25565
 
 # Launch Bungee proxy and Paper server correctly inside their exact directories
-CMD cd /app/bungee && java -Xmx512M -jar bungee.jar & cd /app/server && java -Xmx1G -jar server.jar
+CMD cd /app/bungee && java -Xms64M -Xmx64M -jar bungee.jar & sleep 4 && cd /app/server && java -Xms200M -Xmx250M -XX:+UseG1GC -jar server.jar
+
