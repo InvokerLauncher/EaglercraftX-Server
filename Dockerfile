@@ -18,7 +18,7 @@ RUN chmod +x bungee/*.sh server/*.sh main.sh 2>/dev/null || true
 RUN mkdir -p server && echo "eula=true" > server/eula.txt
 
 # Open the network proxy gates for connections
-EXPOSE 8081
+EXPOSE 10000
 EXPOSE 25565
 
 # Launch Bungee proxy and Paper server correctly inside their exact directories
