@@ -14,12 +14,12 @@ COPY . .
 RUN dos2unix bungee/*.sh server/*.sh main.sh 2>/dev/null || true
 RUN chmod +x bungee/*.sh server/*.sh main.sh 2>/dev/null || true
 
-# Pre-accept the Minecraft software license
-RUN echo "eula=true" > server/eula.txt
+# Force create the agreed EULA file inside the true server folder path
+RUN mkdir -p server && echo "eula=true" > server/eula.txt
 
 # Open the network proxy gates for connections
 EXPOSE 8081
 EXPOSE 25565
 
-# Launch both proxy environments side-by-side automatically
-CMD java -Xmx512M -jar bungee/bungee.jar & java -Xmx1G -jar server/server.jar
+# Launch Bungee proxy and Paper server correctly inside their exact directories
+CMD cd /app/bungee && java -Xmx512M -jar bungee.jar & cd /app/server && java -Xmx1G -jar server.jar
